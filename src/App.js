@@ -37,7 +37,7 @@ function App() {
       <div className="app__body">
         {phoneNumbers.map((phoneNumber, i) => (
           <a
-            className="card mb-20 flex flex__aligncenter"
+            className="card mb-23 flex flex__aligncenter"
             key={phoneNumber.number}
             href={`tel:${phoneNumber.number}`}
             onClick={e => dialNumber(e, phoneNumber.number)}
