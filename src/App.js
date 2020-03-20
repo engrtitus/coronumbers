@@ -27,7 +27,7 @@ function App() {
           <div className="app__header__subtitle">
             A list of corona virus emergency numbers
           </div>
-          {navigator.share && (
+          {!navigator.share && (
             <button className="app__header__icon" onClick={() => shareApp()}>
               <ShareIcon height={20} color={"#fff"} />
             </button>
