@@ -18,10 +18,21 @@
     &__title {
       font-size: 20px;
       font-weight: 500;
-      padding-bottom: 5px;
+      padding-bottom: 3px;
     }
     &__subtitle {
       font-size: 13px;
+    }
+    &__icon {
+      position: fixed;
+      top: 28px;
+      background: none;
+      padding: 0px;
+      right: 15px;
+      outline: none;
+      border: none;
+      cursor: pointer;
+      opacity: 0.7;
     }
   }
   &__footer {
@@ -38,11 +49,14 @@
     }
   }
 
-  .icon__color {
+  .phone__icon {
     margin-right: 10px;
-    box-shadow: -3px 3px 12px rgba(10, 46, 101, 0.03);
     position: relative;
-    bottom: 1px;
+    // bottom: 2px;
+  }
+  .phone__number {
+    position: relative;
+    top: 0.13em;
   }
 
   &__body {
@@ -82,9 +96,6 @@
     button {
       border: none;
       padding: 0 !important;
-      /*optional*/
-      font-family: arial, sans-serif;
-      /*input has OS specific font-family*/
       color: #1976d2;
       cursor: pointer;
       text-align: center;

@@ -15,32 +15,42 @@ const phoneNumbers = [
 ];
 
 function App() {
+  const dialNumber = (e, phoneNumber) => {
+    e.preventDefault();
+    window.location.href = `tel:${phoneNumber}`;
+  };
   return (
     <div className="app">
       <div className="app__header">
         <div>
           <div className="app__header__title">Coronumbers</div>
           <div className="app__header__subtitle">
-            A list of numbers to dial to report corona virus cases
+            A list of corona virus emergency numbers
           </div>
+          {navigator.share && (
+            <button className="app__header__icon" onClick={() => shareApp()}>
+              <ShareIcon height={20} color={"#fff"} />
+            </button>
+          )}
         </div>
       </div>
       <div className="app__body">
         {phoneNumbers.map((phoneNumber, i) => (
           <a
             className="card mb-20 flex flex__aligncenter"
-            key={i}
+            key={phoneNumber.number}
             href={`tel:${phoneNumber.number}`}
+            onClick={e => dialNumber(e, phoneNumber.number)}
           >
-            <span className="icon__color flex">
+            <span className="phone__icon flex">
               <PhoneIcon height={20} width={20} color={phoneNumber.iconColor} />
             </span>
-            <span>{phoneNumber.number}</span>
+            <span className="phone__number flex">{phoneNumber.number}</span>
           </a>
         ))}
       </div>
       <div className="app__button">
-        <button onClick={() => (window.location.href = `tel:080097000010`)}>
+        <button onClick={e => dialNumber(e, "080097000010")}>
           <PhoneIcon height={25} width={25} color={"#ffffff"} />
         </button>
       </div>
@@ -71,6 +81,32 @@ const PhoneIcon = props => {
       />
     </svg>
   );
+};
+
+const ShareIcon = props => {
+  return (
+    <svg viewBox="-21 0 512 512" {...props}>
+      <path
+        fill={props.color}
+        d="M389.332 160c-44.094 0-80-35.883-80-80s35.906-80 80-80c44.098 0 80 35.883 80 80s-35.902 80-80 80zm0-128c-26.453 0-48 21.523-48 48s21.547 48 48 48 48-21.523 48-48-21.547-48-48-48zm0 0M389.332 512c-44.094 0-80-35.883-80-80s35.906-80 80-80c44.098 0 80 35.883 80 80s-35.902 80-80 80zm0-128c-26.453 0-48 21.523-48 48s21.547 48 48 48 48-21.523 48-48-21.547-48-48-48zm0 0M80 336c-44.098 0-80-35.883-80-80s35.902-80 80-80 80 35.883 80 80-35.902 80-80 80zm0-128c-26.453 0-48 21.523-48 48s21.547 48 48 48 48-21.523 48-48-21.547-48-48-48zm0 0"
+      />
+      <path
+        fill={props.color}
+        d="M135.703 240.426c-5.57 0-10.988-2.903-13.91-8.063-4.375-7.68-1.707-17.453 5.973-21.824L325.719 97.684c7.656-4.414 17.449-1.727 21.8 5.976 4.376 7.68 1.708 17.45-5.972 21.824L143.594 238.336a16.03 16.03 0 01-7.89 2.09zm0 0M333.633 416.426c-2.688 0-5.399-.684-7.895-2.11L127.785 301.461c-7.68-4.371-10.344-14.145-5.972-21.824 4.351-7.7 14.125-10.367 21.804-5.973l197.95 112.852c7.68 4.375 10.347 14.144 5.976 21.824-2.945 5.183-8.363 8.086-13.91 8.086zm0 0"
+      />
+    </svg>
+  );
+};
+
+const shareApp = () => {
+  navigator
+    .share({
+      title: "Be safe",
+      text: "Check out this emergency corona virus lines",
+      url: window.location.href
+    })
+    .then(() => console.log("Successful share"))
+    .catch(error => console.log("Error sharing", error));
 };
 
 export default App;
