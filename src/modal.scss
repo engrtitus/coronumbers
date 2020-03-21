@@ -1,0 +1,32 @@
+.modal {
+  background: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 99;
+  transition: 200ms all;
+  &-anim {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+  &-body {
+    background: white;
+    position: absolute;
+    bottom: 0;
+    width: calc(100% - 30px);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 15px;
+    &-content {
+      & > div {
+        max-height: 250px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        overscroll-behavior: contain;
+      }
+    }
+  }
+}

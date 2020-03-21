@@ -1,17 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.scss";
-
-const getRandomColor = () => {
-  let rgb = "#43BA2A";
-  return rgb;
-};
+import Modal from "./Modal";
 
 const phoneNumbers = [
-  { number: "080097000010", iconColor: getRandomColor() },
-  { number: "08000267662", iconColor: getRandomColor() },
-  { number: "08023169485", iconColor: getRandomColor() },
-  { number: "08033565529", iconColor: getRandomColor() },
-  { number: "08052817243", iconColor: getRandomColor() }
+  { number: "080097000010", country: "NG" },
+  { number: "08000267662", country: "NG" },
+  { number: "08023169485", country: "NG" },
+  { number: "08033565529", country: "NG" },
+  { number: "08052817243", country: "NG" },
+  { number: "0800029999", country: "ZA" },
+  { number: "0509497700", country: "GH" },
+  { number: "0552222004", country: "GH" },
+  { number: "0552222005", country: "GH" },
+  { number: "0558439868", country: "GH" },
+  { number: "0800721316", country: "KE" },
+  { number: "072971414", country: "KE" },
+  { number: "0732353535", country: "KE" }
+];
+
+const countries = [
+  { name: "Nigeria", code: "NG", flag: "🇳🇬" },
+  { name: "Ghana", code: "GH", flag: "🇬🇭" },
+  { name: "Kenya", code: "KE", flag: "🇰🇪" },
+  { name: "South Africa", code: "ZA", flag: "🇿🇦" }
 ];
 
 function App() {
@@ -19,6 +30,9 @@ function App() {
     e.preventDefault();
     window.location.href = `tel:${phoneNumber}`;
   };
+  const [country, setCountry] = useState("NG");
+  const [selectingCountry, setSelectingCountry] = useState(false);
+  const activeCountry = countries.find(ac => ac.code === country);
   return (
     <div className="app">
       <div className="app__header">
@@ -27,30 +41,56 @@ function App() {
           <div className="app__header__subtitle">
             A list of corona virus emergency numbers
           </div>
-          {navigator.share && (
+          {!navigator.share && (
             <button className="app__header__icon" onClick={() => shareApp()}>
               <ShareIcon height={20} color={"#fff"} />
+            </button>
+          )}
+          {activeCountry && (
+            <button
+              className="app__header__country"
+              onClick={() => setSelectingCountry(true)}
+            >
+              <div className="app__header__country__flag">
+                {activeCountry.flag}
+              </div>
+              <div className="app__header__country__name">
+                {activeCountry.name}
+              </div>
+              <div className="app__header__country__arrow">
+                <DownArrowIcon height={11} color={"#1976d2"} />
+              </div>
             </button>
           )}
         </div>
       </div>
       <div className="app__body">
-        {phoneNumbers.map((phoneNumber, i) => (
-          <a
-            className="card mb-20 flex flex__aligncenter"
-            key={phoneNumber.number}
-            href={`tel:${phoneNumber.number}`}
-            onClick={e => dialNumber(e, phoneNumber.number)}
-          >
-            <span className="phone__icon flex">
-              <PhoneIcon height={20} width={20} color={phoneNumber.iconColor} />
-            </span>
-            <span className="phone__number flex">{phoneNumber.number}</span>
-          </a>
-        ))}
+        {phoneNumbers
+          .filter(phoneNumber => phoneNumber.country === country)
+          .map((phoneNumber, i) => (
+            <a
+              className="card mb-20 flex flex__aligncenter"
+              key={phoneNumber.number}
+              href={`tel:${phoneNumber.number}`}
+              onClick={e => dialNumber(e, phoneNumber.number)}
+            >
+              <span className="phone__icon flex">
+                <PhoneIcon height={20} width={20} color={"#43BA2A"} />
+              </span>
+              <span className="phone__number flex">{phoneNumber.number}</span>
+            </a>
+          ))}
       </div>
       <div className="app__button">
-        <button onClick={e => dialNumber(e, "080097000010")}>
+        <button
+          onClick={e =>
+            dialNumber(
+              e,
+              phoneNumbers.find(phoneNumber => phoneNumber.country === country)
+                .number
+            )
+          }
+        >
           <PhoneIcon height={25} width={25} color={"#ffffff"} />
         </button>
       </div>
@@ -68,6 +108,24 @@ function App() {
           Titus
         </a>
       </div>
+      {selectingCountry && (
+        <Modal close={() => setSelectingCountry(false)}>
+          <div className="app__select">
+            {countries.map((country, i) => (
+              <div
+                className="app__select__option flex flex__aligncenter flex__justifycenter"
+                key={i}
+                onClick={() => {
+                  setCountry(country.code);
+                }}
+              >
+                <div className="app__select__option__flag">{country.flag}</div>
+                <div className="app__select__option__name">{country.name}</div>
+              </div>
+            ))}
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
@@ -93,6 +151,17 @@ const ShareIcon = props => {
       <path
         fill={props.color}
         d="M135.703 240.426c-5.57 0-10.988-2.903-13.91-8.063-4.375-7.68-1.707-17.453 5.973-21.824L325.719 97.684c7.656-4.414 17.449-1.727 21.8 5.976 4.376 7.68 1.708 17.45-5.972 21.824L143.594 238.336a16.03 16.03 0 01-7.89 2.09zm0 0M333.633 416.426c-2.688 0-5.399-.684-7.895-2.11L127.785 301.461c-7.68-4.371-10.344-14.145-5.972-21.824 4.351-7.7 14.125-10.367 21.804-5.973l197.95 112.852c7.68 4.375 10.347 14.144 5.976 21.824-2.945 5.183-8.363 8.086-13.91 8.086zm0 0"
+      />
+    </svg>
+  );
+};
+
+const DownArrowIcon = props => {
+  return (
+    <svg viewBox="0 0 512 512" {...props}>
+      <path
+        fill={props.color}
+        d="M506.157 132.386c-7.803-7.819-20.465-7.831-28.285-.029l-207.73 207.299c-7.799 7.798-20.486 7.797-28.299-.015L34.128 132.357c-7.819-7.803-20.481-7.79-28.285.029-7.802 7.819-7.789 20.482.029 28.284l207.701 207.27c11.701 11.699 27.066 17.547 42.433 17.547 15.358 0 30.719-5.846 42.405-17.533L506.128 160.67c7.818-7.802 7.831-20.465.029-28.284z"
       />
     </svg>
   );
