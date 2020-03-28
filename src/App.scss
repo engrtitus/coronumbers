@@ -48,6 +48,7 @@
       font-size: 14px;
       border: none;
       outline: none;
+      cursor: pointer;
       &__flag {
         margin-right: 5px;
       }
@@ -146,8 +147,9 @@
   &__select {
     &__option {
       padding: 13px 0px;
+      cursor: pointer;
       &:not(:last-of-type) {
-        border-bottom: 1px solid #f1f1f1;
+        border-bottom: 1px solid #fafafa;
       }
 
       &__flag {

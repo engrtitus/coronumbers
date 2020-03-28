@@ -1,38 +1,18 @@
 import React, { useState } from "react";
 import "./App.scss";
 import Modal from "./Modal";
-
-const phoneNumbers = [
-  { number: "080097000010", country: "NG" },
-  { number: "08000267662", country: "NG" },
-  { number: "08023169485", country: "NG" },
-  { number: "08033565529", country: "NG" },
-  { number: "08052817243", country: "NG" },
-  { number: "0800029999", country: "ZA" },
-  { number: "0509497700", country: "GH" },
-  { number: "0552222004", country: "GH" },
-  { number: "0552222005", country: "GH" },
-  { number: "0558439868", country: "GH" },
-  { number: "0800721316", country: "KE" },
-  { number: "072971414", country: "KE" },
-  { number: "0732353535", country: "KE" }
-];
-
-const countries = [
-  { name: "Nigeria", code: "NG", flag: "🇳🇬" },
-  { name: "Ghana", code: "GH", flag: "🇬🇭" },
-  { name: "Kenya", code: "KE", flag: "🇰🇪" },
-  { name: "South Africa", code: "ZA", flag: "🇿🇦" }
-];
+import { phoneNumbers } from "./phone_numbers";
 
 function App() {
   const dialNumber = (e, phoneNumber) => {
     e.preventDefault();
     window.location.href = `tel:${phoneNumber}`;
   };
-  const [country, setCountry] = useState("NG");
-  const [selectingCountry, setSelectingCountry] = useState(false);
-  const activeCountry = countries.find(ac => ac.code === country);
+  const [selectedState, setSelectedState] = useState("Lagos");
+  const [selectingState, setSelectingState] = useState(false);
+  const activeState = phoneNumbers.find(
+    number => number.state === selectedState
+  );
   return (
     <div className="app">
       <div className="app__header">
@@ -46,16 +26,14 @@ function App() {
               <ShareIcon height={20} color={"#fff"} />
             </button>
           )}
-          {activeCountry && (
+          {activeState && (
             <button
               className="app__header__country"
-              onClick={() => setSelectingCountry(true)}
+              onClick={() => setSelectingState(true)}
             >
-              <div className="app__header__country__flag">
-                {activeCountry.flag}
-              </div>
+              <div className="app__header__country__flag"></div>
               <div className="app__header__country__name">
-                {activeCountry.name}
+                {activeState.state}
               </div>
               <div className="app__header__country__arrow">
                 <DownArrowIcon height={11} color={"#1976d2"} />
@@ -66,7 +44,7 @@ function App() {
       </div>
       <div className="app__body">
         {phoneNumbers
-          .filter(phoneNumber => phoneNumber.country === country)
+          .filter(phoneNumber => phoneNumber.state === selectedState)
           .map((phoneNumber, i) => (
             <a
               className="card mb-20 flex flex__aligncenter"
@@ -86,8 +64,9 @@ function App() {
           onClick={e =>
             dialNumber(
               e,
-              phoneNumbers.find(phoneNumber => phoneNumber.country === country)
-                .number
+              phoneNumbers.find(
+                phoneNumber => phoneNumber.state === selectedState
+              ).number
             )
           }
         >
@@ -108,19 +87,18 @@ function App() {
           Titus
         </a>
       </div>
-      {selectingCountry && (
-        <Modal close={() => setSelectingCountry(false)}>
+      {selectingState && (
+        <Modal close={() => setSelectingState(false)}>
           <div className="app__select">
-            {countries.map((country, i) => (
+            {removeStateDuplicates(phoneNumbers, "state").map((number, i) => (
               <div
                 className="app__select__option flex flex__aligncenter flex__justifycenter"
                 key={i}
                 onClick={() => {
-                  setCountry(country.code);
+                  setSelectedState(number.state);
                 }}
               >
-                <div className="app__select__option__flag">{country.flag}</div>
-                <div className="app__select__option__name">{country.name}</div>
+                <div className="app__select__option__name">{number.state}</div>
               </div>
             ))}
           </div>
@@ -176,6 +154,12 @@ const shareApp = () => {
     })
     .then(() => console.log("Successful share"))
     .catch(error => console.log("Error sharing", error));
+};
+
+const removeStateDuplicates = (myArr, prop) => {
+  return myArr.filter((obj, pos, arr) => {
+    return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos;
+  });
 };
 
 export default App;
