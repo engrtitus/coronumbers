@@ -44,7 +44,7 @@ class Modal extends React.Component {
     this.setState(
       {
         animateFrom: "translateY(0px)",
-        animateTo: "translateY(200px)"
+        animateTo: "translateY(300px)"
       },
       () => {
         this.setState({ showContent: false }, () => {

@@ -146,10 +146,13 @@
   }
   &__select {
     &__option {
-      padding: 13px 0px;
+      padding: 15px 0px;
       cursor: pointer;
       &:not(:last-of-type) {
         border-bottom: 1px solid #fafafa;
+      }
+      &:first-of-type {
+        padding-top: 10px;
       }
 
       &__flag {
