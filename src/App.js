@@ -44,11 +44,14 @@ function App() {
       </div>
       <div className="app__body">
         {phoneNumbers
-          .filter(phoneNumber => phoneNumber.state === selectedState)
+          .filter(
+            phoneNumber =>
+              !phoneNumber.state || phoneNumber.state === selectedState
+          )
           .map((phoneNumber, i) => (
             <a
               className="card mb-20 flex flex__aligncenter"
-              key={phoneNumber.number}
+              key={i}
               href={`tel:${phoneNumber.number}`}
               onClick={e => dialNumber(e, phoneNumber.number)}
             >
@@ -90,7 +93,10 @@ function App() {
       {selectingState && (
         <Modal close={() => setSelectingState(false)}>
           <div className="app__select">
-            {removeStateDuplicates(phoneNumbers, "state").map((number, i) => (
+            {removeStateDuplicates(
+              phoneNumbers.filter(phoneNumber => phoneNumber.state),
+              "state"
+            ).map((number, i) => (
               <div
                 className="app__select__option flex flex__aligncenter flex__justifycenter"
                 key={i}
